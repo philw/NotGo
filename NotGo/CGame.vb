@@ -1,41 +1,51 @@
-﻿Public Class CGame
+﻿Structure TPlayer
+    Dim Name As String
+    Dim Colour As System.Drawing.Color
+    Dim Score As Integer
+End Structure
 
-    Private Const BoardSize As Integer = 9
-    Private Const SquareSize As Integer = 40
-    Private BoardMaxPixels As Integer
-    Private Board(BoardSize - 1, BoardSize - 1) As Byte
 
-    Private Players(1) As String
-    Private PlayerToMove As Integer
+Public Class CGame
+
+    Private Const BoardSize As Integer = 9      ' the number of rows and columns on the board
+    Private Const SquareSize As Integer = 40    ' the size of each square on the board in pixels
+    Private Board(BoardSize - 1, BoardSize - 1) As Short
+    Private BoardSizeInPixels As Integer
+
+    Private Players(1) As TPlayer
+    Private PlayerToMove As Integer         ' whose go is it (zero or one)
 
 
     Public Sub New()
 
+        ' Set up the board
         ' initialize the board to all zeros (empty)
         For y = 0 To BoardSize - 1
             For x = 0 To BoardSize - 1
-                Board(x, y) = 0
+                Board(x, y) = -1
             Next
         Next
 
         ' put some pieces on the board for testing
-        'Board(3, 3) = 1
-        'Board(3, 7) = 2
+        'Board(3, 3) = 0
+        'Board(3, 7) = 1
 
-        BoardMaxPixels = (SquareSize * BoardSize) + 1
-        'MsgBox(BoardMaxPixels)
-        MainForm.BoardDisplay.Width = BoardMaxPixels
-        MainForm.BoardDisplay.Height = BoardMaxPixels
+        BoardSizeInPixels = (SquareSize * BoardSize) + 1
+        MainForm.BoardDisplay.Width = BoardSizeInPixels
+        MainForm.BoardDisplay.Height = BoardSizeInPixels
 
-        Players(0) = "Black"
-        Players(1) = "Red"
-        PlayerToMove = 0
-
-        ' Set the label to show whose go it is
-        MainForm.MoveLabel.Text = Players(PlayerToMove) & " to move"
+        ' set up the players
+        ' this could call a Dialog Box to let the user select names and colours
+        Players(0).Name = "Black"
+        Players(0).Colour = Color.Black
+        Players(1).Name = "Red"
+        Players(1).Colour = Color.Red
 
         ' tell windows that the board needs to be displayed
         MainForm.BoardDisplay.Refresh()
+
+        ' Set the label to show whose go it is
+        MainForm.MoveLabel.Text = Players(PlayerToMove).Name & " to move"
 
     End Sub
 
@@ -60,14 +70,14 @@
 
         Dim Brushes(1) As SolidBrush
 
-        Brushes(0) = New SolidBrush(Color.Black)
-        Brushes(1) = New SolidBrush(Color.Red)
+        Brushes(0) = New SolidBrush(Players(0).Colour)
+        Brushes(1) = New SolidBrush(Players(1).Colour)
 
         For x = 0 To BoardSize - 1
             For y = 0 To BoardSize - 1
-                If Board(x, y) <> 0 Then
+                If Board(x, y) <> -1 Then
                     ' the space is not blank
-                    g.FillEllipse(Brushes(Board(x, y) - 1), x * SquareSize + 2, y * SquareSize + 2, SquareSize - 4, SquareSize - 4)
+                    g.FillEllipse(Brushes(Board(x, y)), x * SquareSize + 2, y * SquareSize + 2, SquareSize - 4, SquareSize - 4)
 
                 End If
             Next
@@ -91,7 +101,7 @@
 
         ' add piece to the board
         ' need to know whose go it is
-        Board(X, Y) = PlayerToMove + 1
+        Board(X, Y) = PlayerToMove
 
         If PlayerToMove = 0 Then
             PlayerToMove = 1
@@ -100,7 +110,7 @@
         End If
 
         ' Set the label to show whose go it is
-        MainForm.MoveLabel.Text = Players(PlayerToMove) & " to move"
+        MainForm.MoveLabel.Text = Players(PlayerToMove).Name & " to move"
 
         ' tell Windows that we have changed the board
         ' and it need to be redrawn
