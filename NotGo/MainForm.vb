@@ -3,7 +3,7 @@
     Private Game As CGame
 
 
-    ' create these event subs using the property window
+    ' create these Event Subroutines using the property window
     ' make sure you have given things sensible names before
     ' you create any of these
 
@@ -22,4 +22,9 @@
 
     End Sub
 
+    Private Sub BoardDisplay_MouseClick(sender As Object, e As MouseEventArgs) Handles BoardDisplay.MouseClick
+
+        Game.PlayerMove(e.X, e.Y)
+
+    End Sub
 End Class
