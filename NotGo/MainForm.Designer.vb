@@ -42,7 +42,7 @@ Partial Class MainForm
         Me.BoardDisplay.BackColor = System.Drawing.Color.White
         Me.BoardDisplay.Location = New System.Drawing.Point(61, 78)
         Me.BoardDisplay.Name = "BoardDisplay"
-        Me.BoardDisplay.Size = New System.Drawing.Size(600, 600)
+        Me.BoardDisplay.Size = New System.Drawing.Size(592, 538)
         Me.BoardDisplay.TabIndex = 1
         Me.BoardDisplay.TabStop = False
         '
